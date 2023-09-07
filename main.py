@@ -23,3 +23,7 @@ async def seasons(season_name: Seasons): #Сравнение элементов 
         return {'Название сезона': 'Осень', 'Сообщение': 'Поздравляю, вы попали на сезон осени'}
     if season_name.value == 'winter':
         return {'Название сезона': 'Зима', 'Сообщение': 'Поздравляю, вы попали на сезон зимы'}
+
+@app.get("/{text:path}/{user_number:path}") # :path, указывает, что параметр должен соответствовать любому пути.
+async def read_file(text: str, user_number: int):
+    return {'Вы написали': text, 'Ваше счастливое число': user_number}
