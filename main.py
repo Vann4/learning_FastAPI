@@ -28,13 +28,16 @@ async def seasons(season_name: Seasons): #Сравнение элементов 
 async def read_text(text: str, user_number: int):
     return {'Вы написали': text, 'Ваше счастливое число': user_number}
 
-fake_items_db = [{"Имя_элемента": "Foo"}, {"Имя_элемента": "Bar"}, {"Имя_элемента": "Baz"}] # Query-запросы
+fake_items_db = [{"Имя_элемента": "Foo"}, {"Имя_элемента": "Bar"}, {"Имя_элемента": "Baz"}]
 @app.get("/item_int/")
-async def read_item_int(skip: int = 0, limit: int = 10):
+async def read_item_int(skip: int = 0, limit: int = 10):  # Query-запросы
     return fake_items_db[skip : skip + limit] # Срез, начиная с индекса skip и ограничение limit
 
-@app.get("/item_text/")
-async def read_item_text(item_text: str, q: str | None = None): # Если передать только item_text
+@app.get("/item_text/{text}")
+async def read_item_text(text: str, q: str | None = None, short: bool = False): # Path-запросы с Query-запросами
+    text = {'Текст элемента': text}
     if q:
-        return {"Первый текст": item_text, "Второй текст": q}
-    return {"Текст лемента": item_text} # То сработает только этот return
+        text.update({'q': q})
+    if not short: # Выполнится только если указать short = false
+        text.update({'Описание': 'Это удивительный товар, который имеет длинное описание'})
+    return text
