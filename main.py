@@ -25,10 +25,16 @@ async def seasons(season_name: Seasons): #Сравнение элементов 
         return {'Название сезона': 'Зима', 'Сообщение': 'Поздравляю, вы попали на сезон зимы'}
 
 @app.get("/text/{text:path}/{user_number:path}") # :path, указывает, что параметр должен соответствовать любому пути.
-async def read_file(text: str, user_number: int):
+async def read_text(text: str, user_number: int):
     return {'Вы написали': text, 'Ваше счастливое число': user_number}
 
 fake_items_db = [{"Имя_элемента": "Foo"}, {"Имя_элемента": "Bar"}, {"Имя_элемента": "Baz"}] # Query-запросы
-@app.get("/items/")
-async def read_item(skip: int = 0, limit: int = 10):
-    return fake_items_db[skip : skip + limit]
+@app.get("/item_int/")
+async def read_item_int(skip: int = 0, limit: int = 10):
+    return fake_items_db[skip : skip + limit] # Срез, начиная с индекса skip и ограничение limit
+
+@app.get("/item_text/")
+async def read_item_text(item_text: str, q: str | None = None): # Если передать только item_text
+    if q:
+        return {"Первый текст": item_text, "Второй текст": q}
+    return {"Текст лемента": item_text} # То сработает только этот return
