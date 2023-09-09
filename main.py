@@ -24,13 +24,11 @@ async def seasons(season_name: Seasons): #Сравнение элементов 
     if season_name.value == 'winter':
         return {'Название сезона': 'Зима', 'Сообщение': 'Поздравляю, вы попали на сезон зимы'}
 
-@app.get("/{text:path}/{user_number:path}") # :path, указывает, что параметр должен соответствовать любому пути.
+@app.get("/text/{text:path}/{user_number:path}") # :path, указывает, что параметр должен соответствовать любому пути.
 async def read_file(text: str, user_number: int):
     return {'Вы написали': text, 'Ваше счастливое число': user_number}
 
-
-fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}] # Query-запросы
-
+fake_items_db = [{"Имя_элемента": "Foo"}, {"Имя_элемента": "Bar"}, {"Имя_элемента": "Baz"}] # Query-запросы
 @app.get("/items/")
 async def read_item(skip: int = 0, limit: int = 10):
     return fake_items_db[skip : skip + limit]
