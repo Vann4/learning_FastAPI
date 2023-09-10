@@ -33,9 +33,9 @@ fake_items_db = [{"Имя_элемента": "Foo"}, {"Имя_элемента":
 async def read_item_int(skip: int = 0, limit: int = 10):  # Query-запросы
     return fake_items_db[skip : skip + limit] # Срез, начиная с индекса skip и ограничение limit
 
-@app.get("/item_text/{text}")
-async def read_item_text(text: str, q: str | None = None, short: bool = False): # Path-запросы с Query-запросами
-    text = {'Текст элемента': text}
+@app.get("/item_text/{name}")
+async def read_item_text(name: str, age: int, q: str | None = None, short: bool = False): # Path-запросы с Query-запросами
+    text = {'Ваше имя': name, 'Ваш возраст': age}
     if q:
         text.update({'q': q})
     if not short: # Выполнится только если указать short = false
