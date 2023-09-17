@@ -1,5 +1,7 @@
+from typing import Union
 from fastapi import FastAPI
 from enum import Enum
+from pydantic import BaseModel
 
 class Seasons(str, Enum): #класс сезонов природы
     spring = 'spring' #весна
@@ -41,3 +43,11 @@ async def read_item_text(name: str, age: int, q: str | None = None, short: bool 
     if not short: # Выполнится только если указать short = false
         text.update({'Описание': 'Это удивительный товар, который имеет длинное описание'})
     return text
+
+class Body(BaseModel): #Добавление тела запроса
+    name: str
+    description: Union[ str, None] = None
+
+@app.post("/request_body/")
+async def body(body: Body):
+    return body
