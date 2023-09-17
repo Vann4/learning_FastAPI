@@ -13,6 +13,11 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    surname: str
+    name: str
+    father_name: str
+    age: int
+    male: bool
 
     class Config:
         from_attributes = True #Это установка значения конфигурации, а не объявление типа.
