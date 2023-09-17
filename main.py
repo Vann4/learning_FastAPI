@@ -1,13 +1,19 @@
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from enum import Enum
 from pydantic import BaseModel
+
+from sqlalchemy.orm import Session
+import crud, models, schemas
+from database import SessionLocal, engine
 
 class Seasons(str, Enum): #класс сезонов природы
     spring = 'spring' #весна
     summer = 'summer' #лето
     fall = 'fall' #осень
     winter = 'winter' #зима
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -48,6 +54,20 @@ class Body(BaseModel): #Добавление тела запроса
     name: str
     description: Union[ str, None] = None
 
-@app.post("/request_body/")
+@app.post("/request_body/") #Пост-запрос для тела
 async def body(body: Body):
     return body
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.post("/users/", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_surname(db, surname=user.surname)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Такая фамилия уже существует")
+    return crud.create_user(db=db, user=user)
